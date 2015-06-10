@@ -1,0 +1,45 @@
+<html>
+
+<head>
+    <script src='http://code.jquery.com/jquery-1.11.1.min.js'></script>
+    <script src='https://raw.githubusercontent.com/chjj/marked/master/lib/marked.js'></script>
+    <script>
+        function load_markdown(url) {
+            $.get(
+                url,
+                function(data) {
+                    $('#rendered-markdown').html(marked(data));
+                }
+            );
+            return false;
+        }
+    </script>
+</head>
+
+<body>
+    <div id='article-list'>
+    </div>
+
+    <hr>
+
+    <div id='rendered-markdown'>
+    </div>
+
+    <script>
+        $.getJSON('/articles.json', function(json) {
+            var list_html = '<ul>';
+
+            $.each(json, function() {
+                list_html = list_html +
+                            '<li>' +
+                            '<a href="#" onclick="load_markdown(\'' + this['file'] + '\')">' +
+                            this['title'] + ' (' + this['date'] + ')' + '</a></li>';
+            });
+
+            list_html = list_html + '</ul>'
+            $('#article-list').html(list_html);
+        });
+    </script>
+</body>
+
+</html>
